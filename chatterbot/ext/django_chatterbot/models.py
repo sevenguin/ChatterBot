@@ -5,7 +5,7 @@ from django.utils import timezone
 class Statement(models.Model):
     """
     A statement represents a single spoken entity, sentence or
-    phrase that someone can say.
+    phrase that is part of a dialog of conversation.
     """
 
     text = models.CharField(
@@ -13,6 +13,13 @@ class Statement(models.Model):
         blank=False,
         null=False,
         max_length=255
+    )
+
+    conversation = models.ForeignKey(
+        'Conversation',
+        related_name='statements',
+        blank=True,
+        null=True
     )
 
     created_at = models.DateTimeField(
@@ -146,3 +153,12 @@ class Response(models.Model):
             statement if len(statement) <= 20 else statement[:17] + '...',
             response if len(response) <= 40 else response[:37] + '...'
         )
+
+
+class Conversation(models.Model):
+    """
+    A sequence of statements representing a conversation.
+    """
+
+    def __str__(self):
+        return str(self.id)
